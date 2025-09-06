@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { api } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
 
-type Course = { id: number; code: string; name: string }
+type Course = { id: number; name: string }
 
 export default function CoursesPage() {
   const { session, loading } = useAuth()
@@ -38,20 +38,20 @@ export default function CoursesPage() {
   if (!session?.loggedIn) return <p>Please log in.</p>
 
   return (
-    <div>
+    <section className="card">
       <h2>Courses</h2>
-      <ul>
+      <ul className="simple-list" style={{ marginTop: 8 }}>
         {courses.map(c => (
-          <li key={c.id} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <span>{c.code} — {c.name}</span>
+          <li className="row" key={c.id}>
+            <span>{c.name}</span>
             {myIds.has(c.id) ? (
-              <button onClick={() => removeCourse(c.id)}>Remove</button>
+              <button className="btn btn-ghost" onClick={() => removeCourse(c.id)}>Remove</button>
             ) : (
-              <button onClick={() => addCourse(c.id)}>Add</button>
+              <button className="btn" onClick={() => addCourse(c.id)}>Add</button>
             )}
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   )
 }

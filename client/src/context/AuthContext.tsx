@@ -8,6 +8,7 @@ type AuthContextType = {
   loading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  refresh: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -17,10 +18,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get<Session>('/session-check')
-      .then((s) => setSession(s))
+    refresh()
       .finally(() => setLoading(false))
   }, [])
+
+  async function refresh() {
+    const s = await api.get<Session>('/session-check')
+    setSession(s)
+  }
 
   async function login(email: string, password: string) {
     const res = await api.post<{ success: boolean; userId: number }>('/login', { email, password })
@@ -36,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, loading, login, logout }}>
+  <AuthContext.Provider value={{ session, loading, login, logout, refresh }}>
       {children}
     </AuthContext.Provider>
   )

@@ -9,6 +9,9 @@ const FriendRequest = require('./models/FriendRequest');
 const Message = require('./models/Message');
 const Course = require('./models/Course');
 const security = require('./utils/security');
+// Ensure database schema and seed data exist (idempotent)
+require('./database');
+
 const app = express();
 const PORT = 8039;
 
@@ -369,8 +372,41 @@ app.put("/friend-request/:requestId", async (req, res) => {
     }
 
     try {
-        const result = await FriendRequest.update(db, requestId, status);
-        res.json(result);
+        // Haal het verzoek op om de betrokken gebruikers te kennen
+        db.get("SELECT sender_id, receiver_id FROM friend_requests WHERE id = ?", [requestId], async (err, row) => {
+            if (err) {
+                console.error("Error fetching friend request:", err);
+                return res.status(500).json({ success: false, message: "Error updating friend request" });
+            }
+            if (!row) {
+                return res.status(404).json({ success: false, message: "Friend request not found" });
+            }
+
+            try {
+                const result = await FriendRequest.update(db, requestId, status);
+                if (status === 'accepted') {
+                    // Verwijder eventueel omgekeerde pending verzoeken tussen dezelfde twee gebruikers
+                    db.run(
+                        `DELETE FROM friend_requests
+                         WHERE status = 'pending'
+                           AND id <> ?
+                           AND ((sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?))`,
+                        [requestId, row.sender_id, row.receiver_id, row.receiver_id, row.sender_id],
+                        function (delErr) {
+                            if (delErr) {
+                                console.error("Error cleaning up reciprocal pending requests:", delErr);
+                            }
+                            return res.json(result);
+                        }
+                    );
+                } else {
+                    return res.json(result);
+                }
+            } catch (error) {
+                console.error("Error updating friend request:", error);
+                return res.status(500).json({ success: false, message: "Error updating friend request" });
+            }
+        });
     } catch (error) {
         console.error("Error updating friend request:", error);
         res.status(500).json({ success: false, message: "Error updating friend request" });

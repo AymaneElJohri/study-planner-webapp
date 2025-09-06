@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function LoginPage() {
@@ -25,12 +25,20 @@ export default function LoginPage() {
   if (session?.loggedIn) return <p>Already logged in as {session.userName}</p>
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'grid', gap: 8, maxWidth: 360 }}>
-      <h2>Login</h2>
-      <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Login</button>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-    </form>
+    <section className="card">
+      <form onSubmit={onSubmit} className="form">
+        <h2>Login</h2>
+        <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="form-actions">
+          <button type="submit" className="btn">Login</button>
+          {error && <span style={{ color: 'crimson' }}>{error}</span>}
+        </div>
+        <p style={{ color: 'var(--text-dim)' }}>
+          Don't have an account?{' '}
+          <Link to="/register" className="btn btn-ghost">Register here</Link>
+        </p>
+      </form>
+    </section>
   )
 }

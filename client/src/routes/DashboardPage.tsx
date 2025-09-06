@@ -6,7 +6,7 @@ type Friend = { id: number; name: string; photo?: string | null }
 type User = { id: number; first_name: string; last_name: string; email: string; photo?: string | null }
 
 export default function DashboardPage() {
-  const { session, loading, logout } = useAuth()
+  const { session, loading } = useAuth()
   const [friends, setFriends] = useState<Friend[]>([])
   const [profile, setProfile] = useState<User | null>(null)
 
@@ -20,23 +20,33 @@ export default function DashboardPage() {
   if (!session?.loggedIn) return <p>Please log in.</p>
 
   return (
-    <div>
-      <h2>Welcome, {session.userName}</h2>
-      <button onClick={logout}>Logout</button>
-      {profile && (
-        <div style={{ marginTop: 12 }}>
-          <h3>Profile</h3>
-          <div>Email: {profile.email}</div>
-        </div>
-      )}
-      <div style={{ marginTop: 12 }}>
-        <h3>Friends</h3>
-        <ul>
-          {friends.map(f => (
-            <li key={f.id}>{f.name}</li>
-          ))}
-        </ul>
-      </div>
+    <div className="grid-2">
+      <section className="card">
+        <h2>Welcome, {session.userName}</h2>
+        {profile && (
+          <div style={{ marginTop: 8 }}>
+            <div style={{ color: 'var(--text-dim)' }}>Email</div>
+            <div>{profile.email}</div>
+          </div>
+        )}
+      </section>
+      <section className="card">
+        <h3>Your friends</h3>
+        {friends.length === 0 ? (
+          <p style={{ color: 'var(--text-dim)' }}>No friends yet. Find classmates in the Friends page.</p>
+        ) : (
+          <ul className="simple-list" style={{ marginTop: 8 }}>
+            {friends.map(f => (
+              <li className="row" key={f.id}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div className="avatar" />
+                  <span>{f.name}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   )
 }
