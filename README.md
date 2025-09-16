@@ -1,5 +1,5 @@
 
-# Study Planner Webapp
+# Social Study Webapp
 
 A small full‑stack app to manage courses, find classmates, add friends, and chat. Built with React (Vite, TypeScript) on the client and Node.js/Express + SQLite on the server.
 
