@@ -27,7 +27,7 @@ async function loadFriends() {
     }
 }
 
-// Haalt de verzoeken op
+// Fetch incoming friend requests
 async function loadPendingRequests() {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -50,7 +50,7 @@ async function loadPendingRequests() {
     }
 }
 
-// Functie om asynchronisch de klasgenoten in te laden 
+// Load classmates asynchronously
 async function loadClassmates() {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -103,7 +103,7 @@ async function loadClassmates() {
     }
 }
 
-//Stuurt een vriendverzoek aan
+// Send a friend request
 async function sendFriendRequest(receiverId) {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -125,7 +125,7 @@ async function sendFriendRequest(receiverId) {
     }
 }
 
-//Verwerkt de verzoeken
+// Handle friend request response
 async function respondToRequest(requestId, status) {
     try {
         const result = await fetchData(`/friend-request/${requestId}`, {
@@ -147,7 +147,7 @@ async function respondToRequest(requestId, status) {
     }
 }
 
-//Verwijderd een vriend
+// Remove a friend
 async function unfriend(friendId) {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();

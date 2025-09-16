@@ -230,20 +230,7 @@ db.serialize(function () {
             })
         }
 
-        function normalizeMessageSalutations(next) {
-            // If content starts with "Hey <Name>,", replace <Name> with the actual receiver's first name
-            db.run(
-                "UPDATE messages SET content = 'Hey ' || (SELECT first_name FROM users WHERE users.id = messages.receiver_id) || substr(content, instr(content, ',')) WHERE content LIKE 'Hey %,%'",
-                function(err) {
-                    if (err) {
-                        console.error('Error normalizing message salutations:', err.message)
-                    } else if (this.changes > 0) {
-                        console.log(`Normalized ${this.changes} message salutation(s).`)
-                    }
-                    next()
-                }
-            )
-        }
+    // Intentionally disabled: keep seeded message content exactly as authored
 
             // Run chain
             ensurePrograms((programIds) =>
@@ -251,7 +238,7 @@ db.serialize(function () {
                     seedUsers(programIds, () =>
                     seedUserCourses(() =>
                         seedFriendRequests(() =>
-                            seedMessages(() => normalizePasswords(() => normalizeMessageSalutations(() => showUsers())))
+                            seedMessages(() => normalizePasswords(() => showUsers()))
                         )
                     )
                 )

@@ -10,7 +10,7 @@ class User {
         this.hobbies = hobbies;
     }
 
-    // Zoekt een gebruiker op via de ID
+    // Find a user by ID (includes program name)
     static async findById(db, userId) {
         return new Promise((resolve, reject) => {
             db.get(
@@ -25,7 +25,7 @@ class User {
         });
     }
 
-    // Maakt een nieuwe gebruiker aan
+    // Create a new user
     static async create(db, userData) {
         const { firstName, lastName, age, email, password, photo, programId, hobbies } = userData;
         
@@ -41,7 +41,7 @@ class User {
         });
     }
 
-    // Update een bestaande gebruiker
+    // Update an existing user (optionally updates photo)
     static async update(db, userId, userData) {
         const { firstName, lastName, age, email, programId, hobbies, photo } = userData;
         

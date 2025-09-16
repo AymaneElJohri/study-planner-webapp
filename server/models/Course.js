@@ -1,5 +1,4 @@
-//Klasse die de course identificeert
-// en de database interacties afhandelt
+// Course model: identifies a course and encapsulates DB operations
 class Course {
     constructor(id, name) {
         this.id = id;

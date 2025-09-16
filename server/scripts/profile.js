@@ -3,7 +3,7 @@ async function fetchData(url, options = {}) {
     if (!response.ok) throw new Error(`Error: ${response.status}`);
     return response.json();
 }
-//Functie om profiel op te halen
+// Load profile data for the logged-in user
 async function loadProfile() {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -21,7 +21,7 @@ async function loadProfile() {
     }
 }
 
-//Functie om de cursussen van de gebruiker op te halen
+// Load courses for the logged-in user
 async function loadUserCourses() {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -67,7 +67,7 @@ async function loadUserCourses() {
     }
 }
 
-//Functie om beschikbare cursussen op te halen
+// Load list of all available courses
 async function loadAvailableCourses() {
     try {
         const response = await fetchData('/courses');
@@ -91,7 +91,7 @@ async function loadAvailableCourses() {
 }
 
 
-//Functie om een cursus toe te voegen
+// Add a course to the user's profile
 async function addCourse(courseId) {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -112,7 +112,7 @@ async function addCourse(courseId) {
     }
 }
 
-//Functie om een cursus te verwijderen
+// Remove a course from the user's profile
 async function removeCourse(courseId) {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -135,7 +135,7 @@ async function removeCourse(courseId) {
     }
 }
 
-//Functie om een cursus toe te voegen via een modal
+// Show modal to add a course
 async function showAddCourseModal() {
     try {
         const coursesData = await loadAvailableCourses();
@@ -259,7 +259,7 @@ function showEditForm() {
     `;
     
     profileSection.appendChild(editForm);
-    //Fetch functie om de huidige profielgegevens op te halen
+    // Fetch current profile details to prefill the form
     fetch(`/profile?userId=${userId}`)
         .then(response => response.json())
         .then(data => {

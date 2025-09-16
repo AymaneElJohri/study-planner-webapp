@@ -1,4 +1,46 @@
+# Node dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build outputs
+dist/
+build/
+client/dist/
+client/build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
 # Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+server/server.log
+logs/
+
+# SQLite database
+server/database.sqlite
+
+# Uploaded images (keep folder via .gitkeep)
+server/public/images/
+!server/public/images/.gitkeep
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# Cache / tooling
+.cache/
+.eslintcache
+*.tsbuildinfo
+coverage/# Logs
 logs
 *.log
 npm-debug.log*

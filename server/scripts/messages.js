@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 });
 
-//Functie om bestaande vrienden te checken
+// Check whether the user has any friends
 async function checkFriends() {
     const userId = localStorage.getItem("userId");
     try {
@@ -35,7 +35,7 @@ async function checkFriends() {
     }
 }
 
-//Afhandeling van error als er geen vrienden zijn
+// Handle UI when there are no friends
 function showNoFriendsMessage() {
     const conversationList = document.getElementById("conversationList");
     conversationList.innerHTML = '<li class="no-friends-message">You have no friends yet</li>';
@@ -63,14 +63,14 @@ function showNoFriendsMessage() {
     });
 }
 
-//Haalt de data op van de server
+// Fetch JSON helper
 async function fetchData(url, options = {}) {
     const response = await fetch(url, options);
     if (!response.ok) throw new Error(`Error: ${response.status}`);
     return response.json();
 }
 
-//Laad de berichten op van de server
+// Load messages for a conversation
 async function loadMessages(contactId) {
     const userId = localStorage.getItem("userId");
     if (!userId) return redirectToLogin();
@@ -140,7 +140,7 @@ async function sendMessage(event) {
     }
 }
 
-//Event listener voor het verzenden van berichten
+// Submit handler for sending messages
 document.getElementById("messageForm").addEventListener("submit", sendMessage);
 
 async function loadConversations(selectFirst = true) {
@@ -216,7 +216,7 @@ async function loadConversations(selectFirst = true) {
         console.error("Error loading conversations:", error);
     }
 }
-//Functie om een gesprek te selecteren
+// Select a conversation in the UI
 function selectConversation(element, contactId, contactName) {
     document.querySelectorAll(".conversation-item").forEach(item => {
         item.classList.remove("selected");
@@ -232,7 +232,7 @@ function selectConversation(element, contactId, contactName) {
     
     loadMessages(contactId);
 }
-//Functie om de vriendenlijst weer te geven
+// Show a modal list of friends to start a new conversation
 async function showFriendsList() {
     try {
         const userId = localStorage.getItem("userId");

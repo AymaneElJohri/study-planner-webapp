@@ -6,7 +6,7 @@ class FriendRequest {
         this.status = status;
     }
 
-    // Haalt alle geaccepteerde vrienden op voor de opgegeven gebruikers-ID
+    // Get all accepted friends for a given user ID
     static async getFriends(db, userId) {
         return new Promise((resolve, reject) => {
             db.all(`
@@ -25,7 +25,7 @@ class FriendRequest {
         });
     }
 
-    // Haalt alle openstaande vriendverzoeken op voor de opgegeven gebruikers-ID
+    // Get all pending friend requests for the given user ID
     static async getPending(db, userId) {
         return new Promise((resolve, reject) => {
             db.all(`
@@ -40,7 +40,7 @@ class FriendRequest {
         });
     }
 
-    // Creëert een nieuw vriendverzoek
+    // Create a new friend request (status defaults to pending)
     static async create(db, senderId, receiverId) {
         return new Promise((resolve, reject) => {
             db.run(
@@ -54,7 +54,7 @@ class FriendRequest {
         });
     }
 
-    // Update de status van een bestaand vriendverzoek
+    // Update the status of an existing friend request
     static async update(db, requestId, status) {
         return new Promise((resolve, reject) => {
             db.run(
@@ -68,7 +68,7 @@ class FriendRequest {
         });
     }
 
-    // Verwijdert een vriendverzoek tussen twee gebruikers
+    // Delete any friend request between two users (both directions)
     static async remove(db, user1Id, user2Id) {
         return new Promise((resolve, reject) => {
             db.run(

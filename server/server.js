@@ -31,7 +31,7 @@ function logger(req, res, next) {
 
 app.use(logger);
 
-//gebruik maken van een sessie
+// Session configuration
 app.use(session({
     secret: 'student-network-secret-key',
     resave: false,
@@ -56,7 +56,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Gebruik maken van res.JSON methode
+// Sanitize all JSON responses
 app.use((req, res, next) => {
     const originalJson = res.json;
     res.json = function(data) {
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
     next();
 });
 
-//Middleware gebruikt voor authentication
+// Auth guard middleware
 function requireAuth(req, res, next) {
     if (req.session && req.session.userId) {
         return next();
@@ -73,7 +73,7 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ success: false, message: "Authentication required" });
 }
 
-// Configuratie voor het opslaan van geüploade foto's
+// Multer storage for uploaded photos
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, 'public/images'));
@@ -115,7 +115,7 @@ app.get("/profile", requireAuth, async (req, res) => {
 app.get("/friends", requireAuth, (req, res) => {
     const userId = req.query.userId || req.session.userId;
 
-    // Query om alleen unieke vrienden op te halen
+    // Return unique friends only
     db.all(`
         SELECT DISTINCT u.id, u.first_name || ' ' || u.last_name AS name, u.photo
         FROM users u
@@ -189,7 +189,7 @@ app.post("/login", (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid email or password" });
         }
 
-        // Datasessie setten
+    // Set session data
         req.session.userId = user.id;
         req.session.userEmail = user.email;
         req.session.userName = `${user.first_name} ${user.last_name}`;
@@ -211,7 +211,7 @@ app.post("/register", upload.single("photo"), (req, res) => {
                 return res.status(500).json({ success: false, message: "Failed to register user" });
             }
 
-            // Sessie creatie na het succesvole aanmaking
+            // Create session after successful registration
             req.session.userId = this.lastID;
             req.session.userEmail = email;
             req.session.userName = `${firstName} ${lastName}`;
@@ -222,7 +222,7 @@ app.post("/register", upload.single("photo"), (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    // Sessie afbreken na uitloggen
+    // Destroy the session on logout
     req.session.destroy((err) => {
         if (err) {
             console.error("Error during logout:", err);
@@ -241,7 +241,7 @@ app.post("/profile/update", upload.single("photo"), (req, res) => {
         return res.status(400).json({ success: false, message: "User ID is required" });
     }
 
-    // Is er een nieuwe foto check
+    // If a new photo was uploaded, include it in the update
     let photoUpdate = "";
     let photoParams = [];
     
@@ -361,7 +361,7 @@ app.post("/friend-request", async (req, res) => {
 
 app.put("/friend-request/:requestId", async (req, res) => {
     const requestId = req.params.requestId;
-    const { status } = req.body; // status kan 'accepted' of 'rejected'
+    const { status } = req.body; // status can be 'accepted' or 'rejected'
     
     if (!requestId || !status) {
         return res.status(400).json({ success: false, message: "Request ID and status are required" });
@@ -372,7 +372,7 @@ app.put("/friend-request/:requestId", async (req, res) => {
     }
 
     try {
-        // Haal het verzoek op om de betrokken gebruikers te kennen
+    // Fetch the request to know the involved users
         db.get("SELECT sender_id, receiver_id FROM friend_requests WHERE id = ?", [requestId], async (err, row) => {
             if (err) {
                 console.error("Error fetching friend request:", err);
@@ -385,7 +385,7 @@ app.put("/friend-request/:requestId", async (req, res) => {
             try {
                 const result = await FriendRequest.update(db, requestId, status);
                 if (status === 'accepted') {
-                    // Verwijder eventueel omgekeerde pending verzoeken tussen dezelfde twee gebruikers
+                    // Remove any reciprocal pending requests between the same two users
                     db.run(
                         `DELETE FROM friend_requests
                          WHERE status = 'pending'
@@ -457,7 +457,7 @@ app.get("/outgoing-requests", async (req, res) => {
     });
 });
 
-// Eindpunt om alle programmas te hebben
+// Endpoint to return all programs
 app.get("/programs", (req, res) => {
     db.all("SELECT id, name FROM programs ORDER BY name", (err, rows) => {
         if (err) {
@@ -497,7 +497,7 @@ app.get("/register.html", (req, res) => {
 });
 
 app.get("/session-check", (req, res) => {
-    // Alleen als iemand ingelogd is, is diegene active
+    // If there's a session, the user is considered active
     if (req.session && req.session.userId) {
         res.json({ 
             loggedIn: true, 
@@ -505,7 +505,7 @@ app.get("/session-check", (req, res) => {
             userName: req.session.userName
         });
     } else {
-        // Alle data weghalen als login niet succesvol was
+        // Clear session data if not logged in
         if (req.session) {
             req.session.destroy(() => {
                 res.json({ loggedIn: false });
@@ -516,7 +516,7 @@ app.get("/session-check", (req, res) => {
     }
 });
 
-// Start de server
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:8039`);
 });

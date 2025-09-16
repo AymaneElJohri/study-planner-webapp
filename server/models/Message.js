@@ -7,7 +7,7 @@ class Message {
         this.timestamp = timestamp || new Date().toISOString();
     }
 
-    // Haalt de conversatie op tussen twee gebruikers
+    // Fetch the conversation between two users
     static async getConversation(db, userId, contactId) {
         return new Promise((resolve, reject) => {
             db.all(`
@@ -27,7 +27,7 @@ class Message {
         });
     }
 
-    // Haalt alle unieke gesprekken op voor een gebruiker
+    // Fetch all unique conversations for a user
     static async getConversations(db, userId) {
         return new Promise((resolve, reject) => {
             db.all(`
@@ -52,7 +52,7 @@ class Message {
         });
     }
 
-    // Maakt een nieuw bericht aan tussen twee gebruikers
+    // Create a new message between two users
     static async create(db, senderId, receiverId, content) {
         return new Promise((resolve, reject) => {
             db.run(
