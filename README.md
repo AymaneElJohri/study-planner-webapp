@@ -1,7 +1,3 @@
-Ja, deze README is inhoudelijk **prima**, het bevat alle belangrijke informatie: wat de app doet, features, tech stack, belangrijke bestanden, setup, environment, en licentie. Het mist alleen nog de **juiste Markdown-formatting** (koppen, lijsten, codeblokken) om het netjes op GitHub te tonen.
-
-Hier is je README in een nette, geformatteerde Markdown-versie:
-
 ````markdown
 # Study Planner Webapp
 
@@ -89,7 +85,6 @@ The root `.gitignore` excludes heavy/runtime files to keep the repo small:
 
 See `LICENSE` for details.
 
-```
 
 
 ```
