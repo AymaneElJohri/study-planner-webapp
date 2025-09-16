@@ -1,3 +1,8 @@
+Ja, deze README is inhoudelijk **prima**, het bevat alle belangrijke informatie: wat de app doet, features, tech stack, belangrijke bestanden, setup, environment, en licentie. Het mist alleen nog de **juiste Markdown-formatting** (koppen, lijsten, codeblokken) om het netjes op GitHub te tonen.
+
+Hier is je README in een nette, geformatteerde Markdown-versie:
+
+````markdown
 # Study Planner Webapp
 
 A small full‑stack app to manage courses, find classmates, add friends, and chat. Built with React (Vite, TypeScript) on the client and Node.js/Express + SQLite on the server.
@@ -12,26 +17,22 @@ A small full‑stack app to manage courses, find classmates, add friends, and ch
 
 ## Tech Stack
 
-- Client: Vite, React, TypeScript, React Router
-- Server: Node.js, Express, express-session, SQLite, Multer
-- DB: SQLite (auto-initialized and seeded on server start)
+- **Client**: Vite, React, TypeScript, React Router  
+- **Server**: Node.js, Express, express-session, SQLite, Multer  
+- **Database**: SQLite (auto-initialized and seeded on server start)  
+- **Monorepo structure**  
 
-## Monorepo structure
+### Key server files
 
-```
-client/   # React app (Vite)
-server/   # Express API + SQLite database
-```
+- `server.js` – Express app, routes, session, static files  
+- `database.js` – Creates tables and seeds demo data (idempotent)  
+- `database.sqlite` – Local SQLite database file (ignored by Git)  
+- `images/` – User-uploaded images (ignored by Git; folder tracked via `.gitkeep`)  
 
-Key server files:
-- `server/server.js` – Express app, routes, session, static files
-- `server/database.js` – Creates tables and seeds demo data (idempotent)
-- `server/database.sqlite` – Local SQLite database file (ignored by Git)
-- `server/public/images/` – User-uploaded images (ignored by Git; folder tracked via .gitkeep)
+### Key client files
 
-Key client files:
-- `client/src/` – React app code (routes, context, API helper, styles)
-- `client/vite.config.ts` – Dev server proxy `/api -> http://localhost:8039`
+- `src/` – React app code (routes, context, API helper, styles)  
+- `vite.config.ts` – Dev server proxy `/api` → `http://localhost:8039`  
 
 ## Prerequisites
 
@@ -39,72 +40,56 @@ Key client files:
 
 ## Setup & Run
 
-Install client dependencies:
+### Client
 
-```
+```bash
 cd client
 npm install
-```
-
-Start the client dev server (http://localhost:5173 by default):
-
-```
 npm run dev
+````
+
+Client runs on [http://localhost:5173](http://localhost:5173) by default.
+
+### Server
+
+Server dependencies are not committed to keep the repo small. Install them once in the server folder:
+
+```bash
+cd server
+npm install
+npm start
 ```
 
-Server dependencies are not committed to keep the repo small. Install them once in `server/`:
+Server runs on port `8039`.
 
-```
-cd ../server
-npm install express express-session sqlite3 multer
-```
+### Notes
 
-Start the server (port 8039):
-
-```
-node server.js
-```
-
-Notes:
-- The database is created and seeded automatically on first server start by `server/database.js`.
-- During development, the client proxy forwards `/api/*` to `http://localhost:8039` (see `client/vite.config.ts`). Use `/api` in client requests.
-- Uploaded images are served from `server/public/images/`.
+* The database is created and seeded automatically on first server start by `database.js`.
+* During development, the client proxy forwards `/api/*` to `http://localhost:8039` (see `vite.config.ts`). Use `/api` in client requests.
+* Uploaded images are served from `images/`.
 
 ## Environment
 
 For local development, the session secret is hard-coded for simplicity. For production, set it via environment variables and avoid committing secrets. Suggested variables:
 
-```
-SESSION_SECRET=change_this_in_production
+```text
+SESSION_SECRET=your_secret_here
 PORT=8039
 ```
 
-## Scripts (suggested, optional)
-
-You may add these scripts to a future `server/package.json` for convenience:
-
-```
-{
-	"scripts": {
-		"start": "node server.js",
-		"dev": "nodemon server.js"
-	},
-	"dependencies": {
-		"express": "^4",
-		"express-session": "^1",
-		"multer": "^1",
-		"sqlite3": "^5"
-	}
-}
-```
-
-## Folder hygiene
+## Folder Hygiene
 
 The root `.gitignore` excludes heavy/runtime files to keep the repo small:
-- `node_modules/`, build outputs (`dist/`, `build/`)
-- `.env` files (keep a `.env.example` if needed)
-- `server/database.sqlite`, logs, and uploaded images
+
+* `node_modules/`, build outputs (`dist/`, `build/`)
+* `.env` files (keep a `.env.example` if needed)
+* `database.sqlite`, logs, and uploaded images
 
 ## License
 
 See `LICENSE` for details.
+
+```
+
+
+```
